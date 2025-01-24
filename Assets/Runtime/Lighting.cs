@@ -53,7 +53,7 @@ public class Lighting
 
     private void SetupDirectionalLight(int index, ref VisibleLight light)
     {
-        dirLightColors[index] = light.finalColor;
+        dirLightColors[index] = light.finalColor;   // finalColor 已包含了灯光强度
         dirLightDirections[index] = -light.localToWorldMatrix.GetColumn(2);
 
     }
