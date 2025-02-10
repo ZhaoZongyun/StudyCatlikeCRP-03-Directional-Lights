@@ -73,7 +73,7 @@ public partial class CameraRenderer
             enableDynamicBatching = useDynamicBatching,
             enableInstancing = useGPUInstancing
         };
-        drawingSettings.SetShaderPassName(1,litShaderTagId);
+        drawingSettings.SetShaderPassName(1, litShaderTagId);
 
         FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.opaque);
 

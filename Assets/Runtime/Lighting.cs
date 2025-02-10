@@ -3,6 +3,9 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+/// <summary>
+/// 灯光渲染
+/// </summary>
 public class Lighting
 {
     const string bufferName = "Lighting";
@@ -15,7 +18,9 @@ public class Lighting
     static int dirLightColorsId = Shader.PropertyToID("_DirectionalLightColors");
     static int dirLightDirectionsId = Shader.PropertyToID("_DirectionalLightDirections");
 
-
+    /// <summary>
+    /// 最大平行光数量
+    /// </summary>
     const int maxDirLightCount = 4;
     static Vector4[] dirLightColors = new Vector4[maxDirLightCount];
     static Vector4[] dirLightDirections = new Vector4[maxDirLightCount];
@@ -38,6 +43,7 @@ public class Lighting
             VisibleLight light = lightArray[i];
             if (light.lightType == LightType.Directional)
             {
+                // 筛选出类型为 Directional
                 SetupDirectionalLight(count++, ref light);
                 if (count >= maxDirLightCount)
                 {
@@ -55,6 +61,5 @@ public class Lighting
     {
         dirLightColors[index] = light.finalColor;   // finalColor 已包含了灯光强度
         dirLightDirections[index] = -light.localToWorldMatrix.GetColumn(2);
-
     }
 }
