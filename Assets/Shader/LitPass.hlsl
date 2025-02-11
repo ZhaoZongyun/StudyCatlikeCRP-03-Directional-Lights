@@ -17,6 +17,7 @@ SAMPLER(sampler_BaseMap);   // 采样器定义
 UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
     UNITY_DEFINE_INSTANCED_PROP(float4, _BaseMap_ST)
     UNITY_DEFINE_INSTANCED_PROP(float4, _BaseColor)
+    UNITY_DEFINE_INSTANCED_PROP(float, _Cutoff)
     UNITY_DEFINE_INSTANCED_PROP(float, _Metallic)
     UNITY_DEFINE_INSTANCED_PROP(float, _Smoothness)
 UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
@@ -58,6 +59,9 @@ float4 LitPassFragment(Varyings input):SV_TARGET {
     float4 baseColor = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
     float4 mapColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.baseUV);
     float4 base = mapColor * baseColor;
+    #if defined(_CLIPPING)
+        clip(base.a - UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff));
+    #endif
 
     Surface surface;
     surface.normal = normalize(input.normalWS);
@@ -67,11 +71,14 @@ float4 LitPassFragment(Varyings input):SV_TARGET {
     surface.metallic = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Metallic);
     surface.smoothness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Smoothness);
 
-    BRDF brdf = GetBRDF(surface, true);
+    #if defined(_PREMULTIPLY_ALPHA)
+        BRDF brdf = GetBRDF(surface, true);
+    #else
+        BRDF brdf = GetBRDF(surface);
+    #endif
     float3 color = GetLighting(surface, brdf);
 
-     return float4(color, surface.alpha);
-    // return float4(surface.metallic,  surface.metallic,  surface.metallic, surface.alpha);
+    return float4(color, surface.alpha);
 }
 
 #endif
