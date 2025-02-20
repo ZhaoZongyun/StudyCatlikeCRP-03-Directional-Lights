@@ -13,13 +13,15 @@
 TEXTURE2D(_BaseMap);        // 属性定义，等同于 Texture _BaseMap
 SAMPLER(sampler_BaseMap);   // 采样器定义
 
-// 属性定义 _BaseColor
 UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
     UNITY_DEFINE_INSTANCED_PROP(float4, _BaseMap_ST)
     UNITY_DEFINE_INSTANCED_PROP(float4, _BaseColor)
-    UNITY_DEFINE_INSTANCED_PROP(float, _Cutoff)
     UNITY_DEFINE_INSTANCED_PROP(float, _Metallic)
     UNITY_DEFINE_INSTANCED_PROP(float, _Smoothness)
+    UNITY_DEFINE_INSTANCED_PROP(int, _SrcBlend)
+    UNITY_DEFINE_INSTANCED_PROP(int, _DstBlend)
+    UNITY_DEFINE_INSTANCED_PROP(int, _PremultiplyAlpha)
+    UNITY_DEFINE_INSTANCED_PROP(float, _Cutoff)
 UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 struct Attributes {
@@ -59,6 +61,7 @@ float4 LitPassFragment(Varyings input):SV_TARGET {
     float4 baseColor = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
     float4 mapColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.baseUV);
     float4 base = mapColor * baseColor;
+
     #if defined(_CLIPPING)
         clip(base.a - UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff));
     #endif

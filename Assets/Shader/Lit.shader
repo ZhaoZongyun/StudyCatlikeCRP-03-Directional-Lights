@@ -11,7 +11,8 @@
 		[Enum(Off, 0, On, 1)] _ZWrite("ZWrite", Float) = 1
 		[Toggle(_PREMULTIPLY_ALPHA)] _PremultiplyAlpha("Premultiply Alpha", Float) = 0
 
-		[Toggle(_CLIPPING)] _Clipping("Clipping", Float) = 0
+		[Toggle(_CLIPPING)] _Clipping("Clipping", Float) = 0.2
+		[KeywordEnum(Red, Green, Blue)] _ColorMode("Color Mode", Float) = 0
 		_Cutoff("Cutoff", Range(0, 1.0)) = 0.5
 	}
 
